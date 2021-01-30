@@ -13,6 +13,18 @@
 |
 */
 
+use App\Models\User;
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+//Endpoints publicos
+$router->post('/v1/login', ['uses' => 'UsersController@login']); //sin hacer aun, falta tabla de tokens
+$router->post('/v1/user', ['uses' => 'UsersController@createUser']);
+
+//Endpoints de administrador
+$router->get('/v1/users', ['uses' => 'UsersController@getAllPaginated']);
+$router->get('/v1/user', ['uses' => 'UsersController@getUser']);
+
+//Endpoints de usuario
