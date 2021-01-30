@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
-class Authenticate{
+class AdminAuthenticate{
     /**
      * The authentication guard factory instance.
      *
@@ -32,7 +32,7 @@ class Authenticate{
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null){
-        if ($this->auth->guard($guard)->guest()) {
+        if (auth()->user() !== NULL && !auth()->user()->is_admin) {
             //return response('Unauthorized.', 401);
 			return response()->json(['Error' => 'Unauthorized.'], 401);
         }

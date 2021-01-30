@@ -17,7 +17,8 @@ class CreateUsersTable extends Migration
             $table->string('username');
             $table->string('email')->unique();
             $table->string('password');
-            $table->ipAddress('registeredIp');
+            $table->ipAddress('registered_ip');
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
         });
     }

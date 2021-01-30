@@ -17,7 +17,7 @@ class Token extends Model {
      * @var array
      */
     protected $fillable = [
-        'userId', 'token', 'loginIp'
+        'user_id', 'token_str', 'login_ip'
     ];
 
     /**
@@ -26,6 +26,6 @@ class Token extends Model {
      * @var array
      */
     protected $hidden = [
-        'token', 'loginIp'
+        'login_ip'
     ];
 }

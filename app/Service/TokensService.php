@@ -15,10 +15,10 @@ class TokensService{
     static function createToken(User $user, string $ip): string{
         $tokenStr = bin2hex(random_bytes(20));
         $token = Token::create([
-            'userId' => $user->id,
-            'token' => $tokenStr,
-            'loginIp' => $ip
+            'user_id' => $user->id,
+            'token_str' => $tokenStr,
+            'login_ip' => $ip
         ]);
-        return $token->token;
+        return $token->token_str;
     }
 }

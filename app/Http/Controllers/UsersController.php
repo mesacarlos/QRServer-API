@@ -18,13 +18,12 @@ class UsersController extends Controller {
             'password' => 'required|max:64'
         ]);
 
-        $user = User::create([
-            'username' => $req->get('username'),
-            'email' => $req->get('email'),
-            'password' => Hash::make($req->get('password')),
-            'registeredIp' => $req->ip()
-        ]);
-
+        $user = UsersService::createUser(
+            $req->get('username'),
+            $req->get('email'),
+            $req->get('password'),
+            $req->ip()
+        );
         return response() -> json($user, 201);
     }
 
@@ -50,20 +49,5 @@ class UsersController extends Controller {
         return response()->json($user, 200);
     }
 
-    function login(Request $req): JsonResponse{
-        $this->validate($req, [
-            'email' => 'required|email',
-            'password' => 'required|max:64'
-        ]);
 
-        $user = UsersService::getUserByEmail($req->get('email'));
-        if($user === NULL)
-            return response()->json(['Error' => 'Incorrect email or password. Please try again.'], 403); //Bad email
-        if(!Hash::check($req->get('password'), $user->password))
-            return response()->json(['Error' => 'Incorrect email or password. Please try again.'], 403); //Bad password
-
-        $token = TokensService::createToken($user, $req->ip());
-
-        return response()->json($token, 200);
-    }
 }

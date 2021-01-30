@@ -13,10 +13,10 @@ class CreateTokensTable extends Migration
      */
     public function up(){
         Schema::create('tokens', function (Blueprint $table) {
-            $table->integer('userId')->unsigned();
-            $table->foreign('userId')->references('id')->on('users');
-            $table->string('token')->unique();
-            $table->ipAddress('loginIp');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('token_str')->unique();
+            $table->ipAddress('login_ip');
             $table->timestamps();
         });
     }
