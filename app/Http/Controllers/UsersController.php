@@ -7,6 +7,7 @@ use App\Service\TokensService;
 use App\Service\UsersService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller {
@@ -49,5 +50,8 @@ class UsersController extends Controller {
         return response()->json($user, 200);
     }
 
+    function getLoggedUser(): JsonResponse{
+		return response()->json(Auth::user(), 200);
+	}
 
 }

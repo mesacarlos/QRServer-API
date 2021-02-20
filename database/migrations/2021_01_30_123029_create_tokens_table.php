@@ -15,7 +15,7 @@ class CreateTokensTable extends Migration
         Schema::create('tokens', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('token_str')->unique();
+            $table->string('token_str')->primary();
             $table->ipAddress('login_ip');
             $table->timestamps();
         });

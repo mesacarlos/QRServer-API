@@ -20,18 +20,17 @@ $router->get('/', function () use ($router) {
 });
 
 //Endpoints publicos
-$router->post('/v1/login', ['uses' => 'TokensController@login']); //sin hacer aun, falta tabla de tokens
-$router->post('/v1/user', ['uses' => 'UsersController@createUser']);
+$router->post('/api/v1/login', ['uses' => 'TokensController@login']); //sin hacer aun, falta tabla de tokens
+$router->post('/api/v1/user', ['uses' => 'UsersController@createUser']);
 
 //Endpoints de administrador
 $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router) {
-	$router->get('/v1/users', ['uses' => 'UsersController@getAllPaginated']);
-	$router->get('/v1/user', ['uses' => 'UsersController@getUser']);
+	$router->get('/api/v1/users', ['uses' => 'UsersController@getAllPaginated']);
+	$router->get('/api/v1/user', ['uses' => 'UsersController@getUser']);
 
 });
 
-
 //Endpoints de usuario
 $router->group(['middleware' => ['auth']], function () use ($router) {
-
+	$router->get('/api/v1/user/me', ['uses' => 'UsersController@getLoggedUser']);
 });
