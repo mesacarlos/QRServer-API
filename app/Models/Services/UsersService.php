@@ -1,8 +1,7 @@
 <?php
+namespace App\Models\Services;
 
-namespace App\Service;
-
-use App\Models\User;
+use App\Models\Entities\User;
 use Illuminate\Support\Facades\Hash;
 
 class UsersService{

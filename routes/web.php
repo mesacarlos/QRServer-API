@@ -13,7 +13,6 @@
 |
 */
 
-use App\Models\User;
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -34,3 +33,5 @@ $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router)
 $router->group(['middleware' => ['auth']], function () use ($router) {
 	$router->get('/api/v1/user/me', ['uses' => 'UsersController@getLoggedUser']);
 });
+
+$router->get('/test', ['uses' => 'QRCodesController@test']);

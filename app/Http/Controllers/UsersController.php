@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Service\TokensService;
-use App\Service\UsersService;
+use App\Models\Entities\User;
+use App\Models\Services\TokensService;
+use App\Models\Services\UsersService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

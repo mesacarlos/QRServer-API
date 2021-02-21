@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Entities;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class Token extends Model {
+class User extends Model implements AuthenticatableContract, AuthorizableContract{
+    use Authenticatable, Authorizable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +18,7 @@ class Token extends Model {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'token_str', 'login_ip'
+        'username', 'email', 'password', 'registered_ip', 'is_admin'
     ];
 
     /**
@@ -26,6 +27,6 @@ class Token extends Model {
      * @var array
      */
     protected $hidden = [
-        'login_ip'
+        'password', 'registered_ip'
     ];
 }

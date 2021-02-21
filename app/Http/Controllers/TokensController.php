@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Service\TokensService;
-use App\Service\UsersService;
+use App\Models\Services\TokensService;
+use App\Models\Services\UsersService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

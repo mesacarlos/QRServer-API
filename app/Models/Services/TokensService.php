@@ -1,8 +1,8 @@
 <?php
-namespace App\Service;
+namespace App\Models\Services;
 
-use App\Models\Token;
-use App\Models\User;
+use App\Models\Entities\Token;
+use App\Models\Entities\User;
 
 class TokensService{
 
