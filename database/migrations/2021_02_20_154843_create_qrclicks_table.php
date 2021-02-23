@@ -23,7 +23,7 @@ class CreateQrclicksTable extends Migration
 			$table->string('access_browser');
 			$table->string('access_os'); //operating system
 			$table->string('access_language');
-			$table->string('device');
+			$table->string('access_device');
         });
     }
 

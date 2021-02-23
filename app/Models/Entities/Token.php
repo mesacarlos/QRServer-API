@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
 class Token extends Model {
+	public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +18,7 @@ class Token extends Model {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'token_str', 'login_ip'
+		'id', 'user_id', 'login_ip'
     ];
 
     /**

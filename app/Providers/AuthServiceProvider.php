@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Entities\Token;
 use App\Models\Entities\User;
+use App\Models\Services\TokensService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider{
 
         $this->app['auth']->viaRequest('api', function ($request) {
             if ($request->header('api_token')) {
-            	$tokenObj = Token::where('token_str', $request->header('api_token')) -> first();
+            	$tokenObj = TokensService::getToken($request->header('api_token'));
             	if($tokenObj != NULL)
             		return User::where('id', $tokenObj->user_id) -> first();
                 //return User::where('api_token', $request->input('api_token'))->first();

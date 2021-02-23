@@ -39,12 +39,11 @@ class UsersController extends Controller {
         return response() -> json(array("users" => $items, "totalUsers" => $numItems), 200);
     }
 
-    function getUser(Request $req): JsonResponse{
-        $userId = intval($req->get('id'));
-        if($userId <= 0) //Parameter is not set, or is not a valid number (negative or 0)
+    function getUser(int $id): JsonResponse{
+        if($id <= 0) //Parameter is not set, or is not a valid number (negative or 0)
             return response()->json(['Error' => 'Please provide a valid id.'], 409);
 
-        $user = UsersService::getUserById($req->get('id'));
+        $user = UsersService::getUserById($id);
         if(!$user)
             return response()->json(['Error' => 'No valid User found for the given id.'], 409);
         return response()->json($user, 200);

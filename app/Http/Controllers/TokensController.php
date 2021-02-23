@@ -23,7 +23,12 @@ class TokensController extends Controller{
 
         $token = TokensService::createToken($user, $req->ip());
 
-        return response()->json(['api_token' => $token], 200);
+        return response()->json(['api_token' => $token->id], 200);
     }
+
+    function logout(Request $req): JsonResponse{
+    	$deleted = TokensService::deleteToken($req->header('api_token'));
+		return response()->json(['loggedOut' => $deleted], 200);
+	}
 
 }
