@@ -20,13 +20,16 @@ $router->get('/', function () use ($router) {
 
 //Endpoints publicos
 $router->post('/api/v1/login', ['uses' => 'TokensController@login']); //sin hacer aun, falta tabla de tokens
-$router->post('/api/v1/user', ['uses' => 'UsersController@createUser']); //Este luego será de admin, y se cambiara por register
+//register
+$router->post('/api/v1/user', ['uses' => 'UsersController@createUser']); //TODO Este luego será de admin, y se cambiara por register
 
 //Endpoints de administrador
 $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router) {
 	$router->get('/api/v1/users', ['uses' => 'UsersController@getAllPaginated']);
 	$router->get('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@getUser']);
-
+	//api/v1/user mover aqui
+	$router->put('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@updateUser']);
+	$router->delete('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@deleteUser']);
 });
 
 //Endpoints de usuario

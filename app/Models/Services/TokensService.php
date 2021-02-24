@@ -6,20 +6,19 @@ use App\Models\Entities\User;
 
 class TokensService{
 
-    /**
-     * Generates a new token for a user
-     * @param User $user User to generate the token
-     * @param string $ip IP of the client
-     * @return string The generated token
-     */
+	/**
+	 * Generates a new token for a user
+	 * @param User $user User to generate the token
+	 * @param string $ip IP of the client
+	 * @return Token The generated token
+	 */
     static function createToken(User $user, string $ip): Token{
         $tokenStr = bin2hex(random_bytes(20));
-        $token = Token::create([
+		return Token::create([
 			'id' => $tokenStr,
-            'user_id' => $user->id,
-            'login_ip' => $ip
-        ]);
-        return $token;
+			'user_id' => $user->id,
+			'login_ip' => $ip
+		]);
     }
 
 	/**

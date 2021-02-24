@@ -16,7 +16,7 @@ class CreateQrclicksTable extends Migration
         Schema::create('qr_clicks', function (Blueprint $table) {
 			$table->increments('id');
 			$table->string('qrcode_id');
-			$table->foreign('qrcode_id')->references('id')->on('qr_codes');
+			$table->foreign('qrcode_id')->references('id')->on('qr_codes')->onUpdate('cascade')->onDelete('cascade');
 			$table->dateTime('access_datetime'); //Cuando el usuario ha entrado en el enlace
 			$table->ipAddress('access_ip');
 			$table->string('access_country_code', 2);

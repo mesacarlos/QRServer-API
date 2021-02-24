@@ -16,7 +16,7 @@ class CreateQrcodesTable extends Migration
         Schema::create('qr_codes', function (Blueprint $table) {
 			$table->string('id')->primary();
 			$table->integer('user_id')->unsigned();
-			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
 			$table->text('destination_url');
 			$table->timestamps();
         });

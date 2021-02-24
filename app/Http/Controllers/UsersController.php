@@ -29,17 +29,15 @@ class UsersController extends Controller {
     }
 
     function getAll(): JsonResponse {
-        $users = User::all();
+        return response() -> json(UsersService::getAllUsers(), 200);
+    }
+
+    function getAllPaginated(): JsonResponse {
+        $users = UsersService::getAllUsersPaginated(20);
         return response() -> json($users, 200);
     }
 
-    function getAllPaginated(): JsonResponse { //https://laravel.com/docs/master/pagination#paginator-instance-methods
-        $items = User::paginate(20) -> items();
-        $numItems = User::paginate(20) -> total();
-        return response() -> json(array("users" => $items, "totalUsers" => $numItems), 200);
-    }
-
-    function getUser(int $id): JsonResponse{
+    function getUser(int $id): JsonResponse {
         if($id <= 0) //Parameter is not set, or is not a valid number (negative or 0)
             return response()->json(['Error' => 'Please provide a valid id.'], 409);
 
@@ -49,7 +47,37 @@ class UsersController extends Controller {
         return response()->json($user, 200);
     }
 
-    function getLoggedUser(): JsonResponse{
+	function updateUser(int $id, Request $req): JsonResponse {
+		if($id <= 0) //Parameter is not set, or is not a valid number (negative or 0)
+			return response()->json(['Error' => 'Please provide a valid id.'], 409);
+
+		$this->validate($req, [
+			'username' => 'alpha_dash|max:24',
+			'email' => 'email|unique:users',
+			'password' => 'max:64'
+		]);
+
+		$user = UsersService::updateUser(
+			$id,
+			$req->get('username'),
+			$req->get('email'),
+			$req->get('password')
+		);
+		if(!$user)
+			return response()->json(['Error' => 'No valid User found for the given id.'], 409);
+
+		return response()->json($user, 200);
+	}
+
+	function deleteUser(int $id, Request $req): JsonResponse {
+		if($id <= 0) //Parameter is not set, or is not a valid number (negative or 0)
+			return response()->json(['Error' => 'Please provide a valid id.'], 409);
+
+		$wasDeleted = UsersService::deleteUserById($id);
+		return response()->json(['userDeleted' => $wasDeleted], 200);
+	}
+
+    function getLoggedUser(): JsonResponse {
 		return response()->json(Auth::user(), 200);
 	}
 

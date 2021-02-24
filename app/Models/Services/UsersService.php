@@ -2,6 +2,7 @@
 namespace App\Models\Services;
 
 use App\Models\Entities\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
 
 class UsersService{
@@ -14,7 +15,7 @@ class UsersService{
      * @param $ip string Source IP of the sign up request
      * @return User user object
      */
-    static function createUser(string $username, string $email, string $password, string $ip){
+    static function createUser(string $username, string $email, string $password, string $ip): User{
         return User::create([
             'username' => $username,
             'email' => $email,
@@ -23,22 +24,74 @@ class UsersService{
         ]);
     }
 
-    /**
-     * Gets the User object corresponding to a given email
-     * @param $email email del usuario
-     * @return User first user with given email
-     */
-    static function getUserByEmail($email){
+	/**
+	 * Return all users in the database
+	 * @return Collection|array Array containing all users
+	 */
+    static function getAllUsers(): Collection|array{
+    	return User::all();
+	}
+
+	/**
+	 * Get all users paginated
+	 * @param int $usersPerPage Number of users per page
+	 * @return array Array containing all users and
+	 */
+	static function getAllUsersPaginated(int $usersPerPage){ //https://laravel.com/docs/master/pagination#paginator-instance-methods
+		$items = User::paginate($usersPerPage) -> items();
+		$numItems = User::paginate($usersPerPage) -> total();
+    	return array("users" => $items, "totalUsers" => $numItems);
+	}
+
+	/**
+	 * Gets the User object corresponding to a given email
+	 * @param $email string email del usuario
+	 * @return User|null first user with given email, null if no user was found
+	 */
+    static function getUserByEmail(string $email): ?User{
         return User::where('email', $email) -> first();
     }
 
-    /**
-     * Gets the User object corresponding to a given Id
-     * @param $id Id of the user
-     * @return User user with the given Id
-     */
-    static function getUserById($id){
+	/**
+	 * Gets the User object corresponding to a given Id
+	 * @param $id int of the user
+	 * @return User|null user with the given Id, null if no user was found
+	 */
+    static function getUserById(int $id): ?User{
         return User::where('id', $id) -> first();
     }
+
+	/**
+	 * Updates an user
+	 * @param int $id id of the user
+	 * @param string|null $username new username or null if unchanged
+	 * @param string|null $email new email or null if unchanged
+	 * @param string|null $password new password or null if unchanged
+	 * @return User|null updated user object. Null if user with given ID not found
+	 */
+    static function updateUser(int $id, ?string $username, ?string $email, ?string $password): ?User {
+		$user = User::find($id);
+		if(!$user)
+			return NULL;
+		if($username)
+			$user->username = $username;
+		if($email)
+			$user->email = $email;
+		if($password)
+			$user->password = Hash::make($password);
+		$user->save();
+		return $user;
+	}
+	/**
+	 * Delete the User gith the given ID
+	 * @param int $id if of the user
+	 * @return bool true if any user was deleted. False otherwise
+	 */
+    static function deleteUserById(int $id): bool{
+    	$count = User::destroy($id);
+    	if($count > 0)
+    		return true;
+    	return false;
+	}
 
 }
