@@ -11,8 +11,7 @@ class CreateQrcodesTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+    public function up(){
         Schema::create('qr_codes', function (Blueprint $table) {
 			$table->string('id')->primary();
 			$table->integer('user_id')->unsigned();
@@ -27,8 +26,7 @@ class CreateQrcodesTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down(){
         Schema::dropIfExists('qr_codes');
     }
 }

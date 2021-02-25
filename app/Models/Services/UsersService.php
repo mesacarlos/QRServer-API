@@ -89,9 +89,7 @@ class UsersService{
 	 */
     static function deleteUserById(int $id): bool{
     	$count = User::destroy($id);
-    	if($count > 0)
-    		return true;
-    	return false;
+    	return $count > 0;
 	}
 
 }

@@ -69,11 +69,39 @@ class UsersController extends Controller {
 		return response()->json($user, 200);
 	}
 
+	function updateLoggedUser(Request $req): JsonResponse{
+		$this->validate($req, [
+			'username' => 'alpha_dash|max:24',
+			'email' => 'email|unique:users',
+			'password' => 'max:64'
+		]);
+
+		$user = UsersService::updateUser(
+			Auth::user() -> id,
+			$req->get('username'),
+			$req->get('email'),
+			$req->get('password')
+		);
+
+		//TODO Si actualiza email, marcar como no verificado
+		return response()->json($user, 200);
+	}
+
 	function deleteUser(int $id, Request $req): JsonResponse {
 		if($id <= 0) //Parameter is not set, or is not a valid number (negative or 0)
 			return response()->json(['Error' => 'Please provide a valid id.'], 409);
 
 		$wasDeleted = UsersService::deleteUserById($id);
+		return response()->json(['userDeleted' => $wasDeleted], 200);
+	}
+
+	function deleteLoggedUser(Request $req): JsonResponse{
+    	$user = Auth::user();
+		if(!Hash::check($req->get('password'), $user->password))
+			return response()->json(['userDeleted' => false], 403);
+
+		//Password Ok, delete user
+		$wasDeleted = UsersService::deleteUserById($user->id);
 		return response()->json(['userDeleted' => $wasDeleted], 200);
 	}
 

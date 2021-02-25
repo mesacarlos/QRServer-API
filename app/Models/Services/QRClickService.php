@@ -11,10 +11,6 @@ class QRClickService{
 		//TODO
 	}
 
-	static function getAllQRClicks(){ //Esta funcion va a desaparecer fijo
-		//TODO
-	}
-
 	static function getAllQRClicksByQRCode(int $qrcode_id){
 		//TODO
 	}
