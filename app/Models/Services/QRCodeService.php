@@ -18,12 +18,27 @@ class QRCodeService{
 		]);
 	}
 
-	static function getPaginatedAllQRCodes(){
-		//TODO
+	/**
+	 * Get all QRCodes, paginated
+	 * @param int $qrsPerPage Number of QRs per page
+	 * @return array Array cointaining qrcodes, the number of total QRCodes, and the number of items per page
+	 */
+	static function getPaginatedAllQRCodes(int $qrsPerPage){
+		$items = QRCode::paginate($qrsPerPage) -> items();
+		$numItems = QRCode::paginate($qrsPerPage) -> total();
+		return array("QRCodes" => $items, "totalQRCodes" => $numItems, "itemsPerPage" => $qrsPerPage);
 	}
-	
-	static function getPaginatedAllQRCodesByUserId(int $userId){
-		//TODO
+
+	/**
+	 * Get all QRCodes of a given User Id, paginated
+	 * @param int $userId Id of the user
+	 * @param int $qrsPerPage Number of QRs per page
+	 * @return array Array cointaining qrcodes, the number of total QRCodes, and the number of items per page
+	 */
+	static function getPaginatedAllQRCodesByUserId(int $userId, int $qrsPerPage){
+		$items = QRCode::where('user_id', $userId)->paginate($qrsPerPage) -> items();
+		$numItems = QRCode::where('user_id', $userId)->paginate($qrsPerPage) -> total();
+		return array("QRCodes" => $items, "totalQRCodes" => $numItems, "itemsPerPage" => $qrsPerPage);
 	}
 
 	/**

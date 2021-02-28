@@ -30,7 +30,7 @@ $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router)
 	//POST /api/v1/user
 	$router->put('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@updateUser']);
 	$router->delete('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@deleteUser']);
-	//GET /api/v1/user/{id:[0-9]+}/qrcodes
+	$router->get('/api/v1/user/{id:[0-9]+}/qrcodes', ['uses' => 'QRCodesController@getUserQRCodes']);
 });
 
 //Endpoints de usuario
@@ -40,9 +40,14 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 	$router->get('/api/v1/user/me', ['uses' => 'UsersController@getLoggedUser']);
 	$router->put('/api/v1/user/me', ['uses' => 'UsersController@updateLoggedUser']);
 	$router->delete('/api/v1/user/me', ['uses' => 'UsersController@deleteLoggedUser']);
-	//GET /api/v1/user/me/qrcodes
+	$router->get('/api/v1/user/me/qrcodes', ['uses' => 'QRCodesController@getLoggedUserQRCodes']);
 
 	//Endpoints para qrcodes
+	//GET /api/v1/qrcode/{id:[A-Za-z0-9]+}
+	//POST /api/v1/qrcode
+	//PUT /api/v1/qrcode/{id:[A-Za-z0-9]+}
+	//DELETE /api/v1/qrcode/{id:[A-Za-z0-9]+}
+	//GET /api/v1/qrcode/{id:[A-Za-z0-9]+}/qrclicks
 
 	//Endpoints para qrclicks
 
