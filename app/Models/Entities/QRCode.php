@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class QRCode extends Model {
 	protected $table = 'qr_codes';
+	public $incrementing = false;
+	protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.

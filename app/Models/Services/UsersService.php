@@ -15,12 +15,13 @@ class UsersService{
      * @param $ip string Source IP of the sign up request
      * @return User user object
      */
-    static function createUser(string $username, string $email, string $password, string $ip): User{
+    static function createUser(string $username, string $email, string $password, string $ip, bool $verified_email = false): User{
         return User::create([
             'username' => $username,
             'email' => $email,
             'password' => Hash::make($password),
-            'registered_ip' => $ip
+            'registered_ip' => $ip,
+			'verified_email' => $verified_email
         ]);
     }
 

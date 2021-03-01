@@ -14,6 +14,26 @@ use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller {
 
+	function registerUser(Request $req): JsonResponse {
+		$this->validate($req, [
+			'username' => 'required|alpha_dash|max:24',
+			'email' => 'required|email|unique:users',
+			'password' => 'required|max:64'
+		]);
+
+		$user = UsersService::createUser(
+			$req->get('username'),
+			$req->get('email'),
+			$req->get('password'),
+			$req->ip()
+		);
+
+		Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user));
+		//Mail::to($req->get('email'))->send(new VerifyAccount($user));
+
+		return response() -> json($user, 201);
+	}
+
     function createUser(Request $req): JsonResponse {
         $this->validate($req, [
             'username' => 'required|alpha_dash|max:24',
@@ -25,11 +45,9 @@ class UsersController extends Controller {
             $req->get('username'),
             $req->get('email'),
             $req->get('password'),
-            $req->ip()
+            $req->ip(),
+			true
         );
-
-		Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user));
-		//Mail::to($req->get('email'))->send(new VerifyAccount($user));
 
         return response() -> json($user, 201);
     }

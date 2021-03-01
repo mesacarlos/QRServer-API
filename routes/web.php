@@ -20,14 +20,13 @@ $router->get('/', function () use ($router) {
 
 //Endpoints publicos
 $router->post('/api/v1/login', ['uses' => 'TokensController@login']); //sin hacer aun, falta tabla de tokens
-//register
-$router->post('/api/v1/user', ['uses' => 'UsersController@createUser']); //TODO Este luego será de admin, y aqui se cambiara por register
+$router->post('/api/v1/register', ['uses' => 'UsersController@registerUser']);
 
 //Endpoints de administrador
 $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router) {
 	$router->get('/api/v1/users', ['uses' => 'UsersController@getAllPaginated']);
 	$router->get('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@getUser']);
-	//POST /api/v1/user
+	$router->post('/api/v1/user', ['uses' => 'UsersController@createUser']);
 	$router->put('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@updateUser']);
 	$router->delete('/api/v1/user/{id:[0-9]+}', ['uses' => 'UsersController@deleteUser']);
 	$router->get('/api/v1/user/{id:[0-9]+}/qrcodes', ['uses' => 'QRCodesController@getUserQRCodes']);
@@ -43,10 +42,10 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 	$router->get('/api/v1/user/me/qrcodes', ['uses' => 'QRCodesController@getLoggedUserQRCodes']);
 
 	//Endpoints para qrcodes
-	//GET /api/v1/qrcode/{id:[A-Za-z0-9]+}
-	//POST /api/v1/qrcode
-	//PUT /api/v1/qrcode/{id:[A-Za-z0-9]+}
-	//DELETE /api/v1/qrcode/{id:[A-Za-z0-9]+}
+	$router->get('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@getQRCode']);
+	$router->post('/api/v1/qrcode', ['uses' => 'QRCodesController@createQRCode']);
+	$router->put('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@updateQRCode']);
+	$router->delete('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@deleteQRCode']);
 	//GET /api/v1/qrcode/{id:[A-Za-z0-9]+}/qrclicks
 
 	//Endpoints para qrclicks
