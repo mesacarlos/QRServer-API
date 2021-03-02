@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class Token extends Model {
+class EmailVerifyToken extends Model {
+	public $timestamps = false;
 	public $incrementing = false;
 	protected $keyType = 'string';
 
@@ -19,7 +20,7 @@ class Token extends Model {
      * @var array
      */
     protected $fillable = [
-		'id', 'user_id', 'login_ip'
+		'id', 'user_id', 'email'
     ];
 
     /**
@@ -28,6 +29,6 @@ class Token extends Model {
      * @var array
      */
     protected $hidden = [
-        'login_ip'
+
     ];
 }

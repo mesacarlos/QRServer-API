@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\VerifyAccount;
+use App\Models\Services\EmailVerifyTokensService;
 use App\Models\Services\TokensService;
 use App\Models\Services\UsersService;
 use Illuminate\Http\JsonResponse;
@@ -23,8 +24,9 @@ class TokensController extends Controller{
         if(!Hash::check($req->get('password'), $user->password))
             return response()->json(['Error' => 'Incorrect email or password. Please try again.'], 403); //Bad password
 		if($user->verified_email == false) {
-			Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user));
-			//Mail::to($req->get('email'))->send(new VerifyAccount($user));
+			$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
+			Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
+			//Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
 			return response()->json(['Error' => 'Please verify your email in order to enable login'], 403); //Account not verified
 		}
         $token = TokensService::createToken($user, $req->ip());
@@ -34,7 +36,7 @@ class TokensController extends Controller{
 
     function logout(Request $req): JsonResponse{
     	$deleted = TokensService::deleteToken($req->header('api_token'));
-		return response()->json(['loggedOut' => $deleted], 200);
+		return response()->json($deleted, 200);
 	}
 
 }

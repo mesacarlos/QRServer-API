@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\VerifyAccount;
 use App\Models\Entities\User;
+use App\Models\Services\EmailVerifyTokensService;
 use App\Models\Services\TokensService;
 use App\Models\Services\UsersService;
 use Illuminate\Http\JsonResponse;
@@ -28,8 +29,9 @@ class UsersController extends Controller {
 			$req->ip()
 		);
 
-		Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user));
-		//Mail::to($req->get('email'))->send(new VerifyAccount($user));
+		$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
+		Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
+		//Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
 
 		return response() -> json($user, 201);
 	}
@@ -107,7 +109,6 @@ class UsersController extends Controller {
 			$req->get('password')
 		);
 
-		//TODO Si actualiza email, marcar como no verificado
 		return response()->json($user, 200);
 	}
 
@@ -116,17 +117,17 @@ class UsersController extends Controller {
 			return response()->json(['Error' => 'Please provide a valid id.'], 409);
 
 		$wasDeleted = UsersService::deleteUserById($id);
-		return response()->json(['userDeleted' => $wasDeleted], 200);
+		return response()->json($wasDeleted, 200);
 	}
 
 	function deleteLoggedUser(Request $req): JsonResponse{
     	$user = Auth::user();
 		if(!Hash::check($req->get('password'), $user->password))
-			return response()->json(['userDeleted' => false], 403);
+			return response()->json(false, 403);
 
 		//Password Ok, delete user
 		$wasDeleted = UsersService::deleteUserById($user->id);
-		return response()->json(['userDeleted' => $wasDeleted], 200);
+		return response()->json($wasDeleted, 200);
 	}
 
     function getLoggedUser(): JsonResponse {

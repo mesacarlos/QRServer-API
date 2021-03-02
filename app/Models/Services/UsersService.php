@@ -76,13 +76,31 @@ class UsersService{
 			return NULL;
 		if($username)
 			$user->username = $username;
-		if($email)
+		if($email){
 			$user->email = $email;
+			$user->verified_email = false;
+		}
 		if($password)
 			$user->password = Hash::make($password);
 		$user->save();
 		return $user;
 	}
+
+	/**
+	 * Set verified_email to true
+	 * @param $user_id User id
+	 * @return User|null Updated user if the user exists in database. NULL otherwise
+	 */
+	static function setUserEmailVerified($user_id): ?User{
+		$user = User::find($user_id);
+		if(!$user)
+			return NULL;
+
+		$user->verified_email = true;
+		$user->save();
+		return $user;
+	}
+
 	/**
 	 * Delete the User gith the given ID
 	 * @param int $id if of the user

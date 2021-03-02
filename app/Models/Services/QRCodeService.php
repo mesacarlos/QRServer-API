@@ -11,12 +11,11 @@ class QRCodeService{
 		if(self::getQRCode($id))
 			return NULL;
 
-		$qrcode = new QRCode;
-		$qrcode->id = $id;
-		$qrcode->user_id = $user_id;
-		$qrcode->destination_url = $destination_url;
-		$qrcode->save();
-		return $qrcode;
+		return QRCode::create([
+			'id' => $id,
+			'user_id' => $user_id,
+			'destination_url' => $destination_url
+		]);
 	}
 
 	/**

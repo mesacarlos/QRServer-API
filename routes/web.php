@@ -21,6 +21,7 @@ $router->get('/', function () use ($router) {
 //Endpoints publicos
 $router->post('/api/v1/login', ['uses' => 'TokensController@login']); //sin hacer aun, falta tabla de tokens
 $router->post('/api/v1/register', ['uses' => 'UsersController@registerUser']);
+$router->post('/api/v1/emailverify/{id}', ['uses' => 'EmailVerifyTokensController@verify']);
 
 //Endpoints de administrador
 $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router) {

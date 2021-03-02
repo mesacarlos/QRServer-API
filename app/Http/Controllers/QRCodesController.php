@@ -70,7 +70,7 @@ class QRCodesController extends Controller {
 
 		//Es admin o es un QR del usuario, lo borramos
 		$wasDeleted = QRCodeService::deleteQRCode($id);
-		return response() -> json(['QRCodeDeleted' => $wasDeleted], 200);
+		return response() -> json($wasDeleted, 200);
 	}
 
 }

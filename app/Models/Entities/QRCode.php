@@ -15,7 +15,7 @@ class QRCode extends Model {
      * @var array
      */
     protected $fillable = [
-        'user_id', 'destination_url', 'created_at', 'updated_at'
+        'id', 'user_id', 'destination_url', 'created_at', 'updated_at'
     ];
 
     /**
