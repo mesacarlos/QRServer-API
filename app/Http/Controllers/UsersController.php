@@ -28,12 +28,13 @@ class UsersController extends Controller {
 			$req->get('password'),
 			$req->ip()
 		);
+		$user->is_admin = false;
 
 		$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
 		Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
 		//Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
 
-		return response() -> json($user, 201);
+		return response() -> json($user, 200);
 	}
 
     function createUser(Request $req): JsonResponse {
