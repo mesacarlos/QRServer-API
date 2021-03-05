@@ -27,7 +27,7 @@ class TokensController extends Controller{
 			$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
 			Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
 			//Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
-			return response()->json(['Error' => 'Please verify your email in order to enable login'], 403); //Account not verified
+			return response()->json(['Error' => 'Please verify your email in order to enable login'], 401); //Account not verified
 		}
         $token = TokensService::createToken($user, $req->ip());
 
