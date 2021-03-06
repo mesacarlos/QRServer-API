@@ -18,10 +18,15 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+//Endpoints que no son parte de la API
+$router->get('/q/{id}', ['uses' => 'PublicController@qrRedirect']);
+
 //Endpoints publicos
-$router->post('/api/v1/login', ['uses' => 'TokensController@login']); //sin hacer aun, falta tabla de tokens
+$router->post('/api/v1/login', ['uses' => 'TokensController@login']);
 $router->post('/api/v1/register', ['uses' => 'UsersController@registerUser']);
 $router->post('/api/v1/emailverify/{id}', ['uses' => 'EmailVerifyTokensController@verify']);
+$router->post('/api/v1/forgotpassword/sendtoken', ['uses' => 'ForgotPasswordTokensController@sendToken']);
+$router->post('/api/v1/forgotpassword/verify', ['uses' => 'ForgotPasswordTokensController@updatePassword']);
 
 //Endpoints de administrador
 $router->group(['middleware' => ['auth', 'is_admin']], function () use ($router) {

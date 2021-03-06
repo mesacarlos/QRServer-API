@@ -13,6 +13,8 @@ class EmailVerifyTokensService{
 	 */
     static function createEmailVerifyToken(User $user): EmailVerifyToken{
         $tokenStr = bin2hex(random_bytes(20));
+		while(self::getToken($tokenStr))
+			$tokenStr = bin2hex(random_bytes(20));
 		return EmailVerifyToken::create([
 			'id' => $tokenStr,
 			'user_id' => $user->id,

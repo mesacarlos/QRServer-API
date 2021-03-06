@@ -70,7 +70,7 @@ class UsersService{
 	 * @param string|null $password new password or null if unchanged
 	 * @return User|null updated user object. Null if user with given ID not found
 	 */
-    static function updateUser(int $id, ?string $username, ?string $email, ?string $password): ?User {
+    static function updateUser(int $id, string $username = NULL, string $email = NULL, string $password = NULL): ?User {
 		$user = User::find($id);
 		if(!$user)
 			return NULL;

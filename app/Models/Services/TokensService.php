@@ -14,6 +14,8 @@ class TokensService{
 	 */
     static function createToken(User $user, string $ip): Token{
         $tokenStr = bin2hex(random_bytes(20));
+		while(self::getToken($tokenStr))
+			$tokenStr = bin2hex(random_bytes(20));
 		return Token::create([
 			'id' => $tokenStr,
 			'user_id' => $user->id,
