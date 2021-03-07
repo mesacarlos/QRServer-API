@@ -13,7 +13,7 @@ class ForgotPasswordTokensController extends Controller{
 	function sendToken(Request $req): JsonResponse{
 		$user = UsersService::getUserByEmail($req->get("email"));
 		if(!$user)
-			return response()->json(false, 200);
+			return response()->json(true, 200);
 
 		//Creamos un token para ese usuario
 		$token = ForgotPasswordTokensService::createToken($user);

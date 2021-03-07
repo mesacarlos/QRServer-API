@@ -11,12 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class QRCodesController extends Controller {
 
-	function getUserQRCodes(int $id): JsonResponse {
-		return response() -> json(QRCodeService::getPaginatedAllQRCodesByUserId($id, 20), 200);
+	function getUserQRCodes(Request $req, int $id): JsonResponse {
+		$itemsPerPage = $req->get("itemsPerPage");
+		if(!$itemsPerPage)
+			$itemsPerPage = 20;
+		return response() -> json(QRCodeService::getPaginatedAllQRCodesByUserId($id, $itemsPerPage), 200);
 	}
 
-	function getLoggedUserQRCodes(): JsonResponse {
-		return response() -> json(QRCodeService::getPaginatedAllQRCodesByUserId(Auth::user()->id, 20), 200);
+	function getLoggedUserQRCodes(Request $req): JsonResponse {
+		$itemsPerPage = $req->get("itemsPerPage");
+		if(!$itemsPerPage)
+			$itemsPerPage = 20;
+		return response() -> json(QRCodeService::getPaginatedAllQRCodesByUserId(Auth::user()->id, $itemsPerPage), 200);
 	}
 
 	function getQRCode(string $id): JsonResponse {
@@ -29,14 +35,21 @@ class QRCodesController extends Controller {
 
 	function createQRCode(Request $req){
 		$this->validate($req, [
-			'id' => 'required|alpha_dash|min:3|max:16|unique:qr_codes',
+			'id' => 'alpha_dash|min:3|max:16|unique:qr_codes',
 			'destination_url' => 'required|url'
 		]);
 
-		$qrcode = QRCodeService::createQRCode($req->get("id"), Auth::user()->id, $req->get("destination_url"));
+		$qrcode_id = $req->get("id");
+		if(!$qrcode_id) {
+			$qrcode_id = bin2hex(random_bytes(8));
+			while(QRCodeService::getQRCode($qrcode_id)) //If already exists...
+				$qrcode_id = bin2hex(random_bytes(8));
+		}
+
+		$qrcode = QRCodeService::createQRCode($qrcode_id, Auth::user()->id, $req->get("destination_url"));
 
 		if($qrcode == NULL)
-			return response() -> json(['Error' => 'QRCode was not created'], 500);
+			return response() -> json(['Error' => 'A QR Code with the given ID already exists'], 409);
 		return response() -> json($qrcode, 200);
 	}
 
@@ -48,7 +61,7 @@ class QRCodesController extends Controller {
 		//Comprobamos que el QR es del usuario, o que el usuario es admin
 		$originalQRCode = QRCodeService::getQRCode($id);
 		if(!$originalQRCode)
-			return response() -> json(['Error' => 'QRCode not found'], 409);
+			return response() -> json(['Error' => 'QRCode not found'], 404);
 		if($originalQRCode->user_id != Auth::user()->id && !Auth::user()->is_admin)
 			return response() -> json(['Error' => 'Forbidden'], 403);
 
@@ -56,7 +69,7 @@ class QRCodesController extends Controller {
 		$qrcode = QRCodeService::updateQRCode($id, $req->get("id"), $req->get("destination_url"));
 
 		if(!$qrcode)
-			return response() -> json(['Error' => 'QRCode not found'], 409);
+			return response() -> json(['Error' => 'QRCode not found'], 404);
 		return response() -> json($qrcode, 200);
 	}
 
@@ -64,7 +77,7 @@ class QRCodesController extends Controller {
 		//Comprobamos que el QR es del usuario, o que el usuario es admin
 		$originalQRCode = QRCodeService::getQRCode($id);
 		if(!$originalQRCode)
-			return response() -> json(['Error' => 'QRCode not found'], 409);
+			return response() -> json(['Error' => 'QRCode not found'], 404);
 		if($originalQRCode->user_id != Auth::user()->id && !Auth::user()->is_admin)
 			return response() -> json(['Error' => 'Forbidden'], 403);
 

@@ -39,9 +39,11 @@ class UsersService{
 	 * @return array Array containing all users and
 	 */
 	static function getAllUsersPaginated(int $usersPerPage){ //https://laravel.com/docs/master/pagination#paginator-instance-methods
-		$items = User::paginate($usersPerPage) -> items();
-		$numItems = User::paginate($usersPerPage) -> total();
-    	return array("users" => $items, "totalUsers" => $numItems);
+		$paginate = User::orderBy('created_at', 'desc') -> paginate($usersPerPage);
+		$items = $paginate -> items();
+		$numItems = $paginate -> total();
+		$numPages = ceil(floatval($numItems) / floatval($usersPerPage));
+    	return array("items" => $items, "totalItems" => $numItems, "totalPages" => $numPages);
 	}
 
 	/**

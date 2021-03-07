@@ -59,8 +59,11 @@ class UsersController extends Controller {
         return response() -> json(UsersService::getAllUsers(), 200);
     }
 
-    function getAllPaginated(): JsonResponse {
-        $users = UsersService::getAllUsersPaginated(20);
+    function getAllPaginated(Request $req): JsonResponse {
+		$itemsPerPage = $req->get("itemsPerPage");
+		if(!$itemsPerPage)
+			$itemsPerPage = 20;
+        $users = UsersService::getAllUsersPaginated($itemsPerPage);
         return response() -> json($users, 200);
     }
 

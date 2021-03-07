@@ -24,9 +24,11 @@ class QRCodeService{
 	 * @return array Array cointaining qrcodes, the number of total QRCodes, and the number of items per page
 	 */
 	static function getPaginatedAllQRCodes(int $qrsPerPage){
-		$items = QRCode::paginate($qrsPerPage) -> items();
-		$numItems = QRCode::paginate($qrsPerPage) -> total();
-		return array("QRCodes" => $items, "totalQRCodes" => $numItems, "itemsPerPage" => $qrsPerPage);
+		$paginator = QRCode::orderBy('created_at', 'desc') -> paginate($qrsPerPage);
+		$items = $paginator -> items();
+		$numItems = $paginator -> total();
+		$numPages = ceil(floatval($numItems) / floatval($qrsPerPage));
+		return array("items" => $items, "totalItems" => $numItems, "totalPages" => $numPages);
 	}
 
 	/**
@@ -36,9 +38,11 @@ class QRCodeService{
 	 * @return array Array cointaining qrcodes, the number of total QRCodes, and the number of items per page
 	 */
 	static function getPaginatedAllQRCodesByUserId(int $userId, int $qrsPerPage){
-		$items = QRCode::where('user_id', $userId)->paginate($qrsPerPage) -> items();
-		$numItems = QRCode::where('user_id', $userId)->paginate($qrsPerPage) -> total();
-		return array("QRCodes" => $items, "totalQRCodes" => $numItems, "itemsPerPage" => $qrsPerPage);
+		$paginator = QRCode::where('user_id', $userId) -> orderBy('created_at', 'desc') -> paginate($qrsPerPage);
+		$items = $paginator -> items();
+		$numItems = $paginator -> total();
+		$numPages = ceil(floatval($numItems) / floatval($qrsPerPage));
+		return array("items" => $items, "totalItems" => $numItems, "totalPages" => $numPages);
 	}
 
 	/**
