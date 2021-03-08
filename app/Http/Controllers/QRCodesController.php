@@ -30,6 +30,8 @@ class QRCodesController extends Controller {
 		if($qrcode == NULL || (Auth::user()->id != $qrcode->user_id && !Auth::user()->is_admin))
 			return response() -> json(['Error' => 'QRCode not found'], 404);
 
+		//Add svg_image to the response
+		$qrcode->svg_image = (string)\SimpleSoftwareIO\QrCode\Facades\QrCode::errorCorrection('H')->size(100)->generate(env('APP_URL') . "/q/" . $qrcode->id);
 		return response() -> json($qrcode, 200);
 	}
 
