@@ -31,8 +31,12 @@ class UsersController extends Controller {
 		$user->is_admin = false;
 
 		$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
-		Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
-		//Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
+
+		if(env('APP_DEBUG', true)){
+			Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
+		}else{
+			Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
+		}
 
 		return response() -> json($user, 200);
 	}

@@ -19,8 +19,11 @@ class ForgotPasswordTokensController extends Controller{
 		$token = ForgotPasswordTokensService::createToken($user);
 
 		//Enviamos mail con el token
-		Mail::to("carlos@mesacarlos.es")->send(new ForgotPassword($user, $token));
-		//Mail::to($req->get('email'))->send(new ForgotPassword($user, $token));
+		if(env('APP_DEBUG', true)){
+			Mail::to("carlos@mesacarlos.es")->send(new ForgotPassword($user, $token));
+		}else{
+			Mail::to($req->get('email'))->send(new ForgotPassword($user, $token));
+		}
 
 		return response()->json(true, 200);
 	}

@@ -20,24 +20,24 @@ class CorsMiddleware
 				'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
 				'Access-Control-Allow-Credentials' => 'true',
 				'Access-Control-Max-Age'           => '86400',
-				'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, api_token'
+				'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, apitoken'
 			];
 		}else{
-			$http_origin = $_SERVER['HTTP_ORIGIN'];
-			if ($http_origin == "http://mesacarlos.es" || $http_origin == "https://mesacarlos.es") {
+			$http_origin = $request->server('HTTP_ORIGIN');
+			if ($http_origin && ($http_origin == "http://mesacarlos.es" || $http_origin == "https://mesacarlos.es")) {
 				$headers = [
-					'Access-Control-Allow-Origin'      => $http_origin, //TODO Cambiar a qr.mesacarlos.es, para http y https
+					'Access-Control-Allow-Origin'      => $http_origin,
 					'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
 					'Access-Control-Allow-Credentials' => 'true',
 					'Access-Control-Max-Age'           => '86400',
-					'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, api_token'
+					'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, apitoken'
 				];
 			} else {
 				$headers = [
 					'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
 					'Access-Control-Allow-Credentials' => 'true',
 					'Access-Control-Max-Age'           => '86400',
-					'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, api_token'
+					'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, apitoken'
 				];
 			}
 		}

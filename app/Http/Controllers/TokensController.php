@@ -25,8 +25,13 @@ class TokensController extends Controller{
             return response()->json(['Error' => 'Incorrect email or password. Please try again.'], 403); //Bad password
 		if($user->verified_email == false) {
 			$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
-			Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
-			//Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
+
+			if(env('APP_DEBUG', true)){
+				Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
+			}else{
+				Mail::to($req->get('email'))->send(new VerifyAccount($user, $emailtoken));
+			}
+
 			return response()->json(['Error' => 'Please verify your email in order to enable login'], 401); //Account not verified
 		}
         $token = TokensService::createToken($user, $req->ip());
@@ -35,7 +40,7 @@ class TokensController extends Controller{
     }
 
     function logout(Request $req): JsonResponse{
-    	$deleted = TokensService::deleteToken($req->header('api_token'));
+    	$deleted = TokensService::deleteToken($req->header('apitoken'));
 		return response()->json($deleted, 200);
 	}
 
