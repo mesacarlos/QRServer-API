@@ -26,6 +26,7 @@ class TokensController extends Controller{
 		if($user->verified_email == false) {
 			$emailtoken = EmailVerifyTokensService::createEmailVerifyToken($user);
 
+			var_dump(env('MAIL_HOST'));
 			if(env('APP_DEBUG', true)){
 				Mail::to("carlos@mesacarlos.es")->send(new VerifyAccount($user, $emailtoken));
 			}else{

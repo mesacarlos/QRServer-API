@@ -52,10 +52,7 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 	$router->post('/api/v1/qrcode', ['uses' => 'QRCodesController@createQRCode']);
 	$router->put('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@updateQRCode']);
 	$router->delete('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@deleteQRCode']);
-	//GET /api/v1/qrcode/{id:[A-Za-z0-9]+}/qrclicks
+	//GET /api/v1/qrcode/{id:[A-Za-z0-9]+}/stats
 
-	//Endpoints para qrclicks
 
 });
-
-$router->get('/test', ['uses' => 'QRClicksController@test']);

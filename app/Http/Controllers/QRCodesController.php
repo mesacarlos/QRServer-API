@@ -57,7 +57,7 @@ class QRCodesController extends Controller {
 
 	function updateQRCode(string $id, Request $req){
 		$this->validate($req, [
-			'id' => 'alpha_dash|min:3|max:16|unique:qr_codes',
+			'id' => 'alpha_dash|min:3|max:16',
 			'destination_url' => 'url'
 		]);
 		//Comprobamos que el QR es del usuario, o que el usuario es admin

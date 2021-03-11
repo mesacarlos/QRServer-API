@@ -58,7 +58,7 @@ class QRCodeService{
 	 * Update a QRCode
 	 * @param string $id Id of the QRCode
 	 * @param string|null $new_id New ID of the QRCode
-	 * @param string|null $destination_url new URL of the QRCode. DOES OT CHECK THAT IT IS A VALID URL!
+	 * @param string|null $destination_url new URL of the QRCode. DOES NOT CHECK THAT IT IS A VALID URL!
 	 * @return QRCode|null The updated QRCode. NULL if a QRCode with the given id was not found.
 	 */
 	static function updateQRCode(string $id, ?string $new_id, ?string $destination_url): ?QRCode{
