@@ -31,7 +31,7 @@ class QRCodesController extends Controller {
 			return response() -> json(['Error' => 'QRCode not found'], 404);
 
 		//Add svg_image to the response
-		$qrcode->svg_image = (string)\SimpleSoftwareIO\QrCode\Facades\QrCode::errorCorrection('H')->size(100)->generate(env('APP_URL') . "/q/" . $qrcode->id);
+		$qrcode->png_image = base64_encode((string)\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->errorCorrection('H')->size(256)->generate(env('APP_URL') . "/q/" . $qrcode->id));
 		return response() -> json($qrcode, 200);
 	}
 
