@@ -5,6 +5,7 @@ namespace App\Models\Entities;
 use Illuminate\Database\Eloquent\Model;
 
 class QRClick extends Model {
+	public $timestamps = false;
 	protected $table = 'qr_clicks';
 
     /**
@@ -13,7 +14,7 @@ class QRClick extends Model {
      * @var array
      */
     protected $fillable = [
-        'qrcode_id', 'access_datetime', 'access_country_code', 'access_browser', 'access_os', 'access_language', 'access_device'
+        'qrcode_id', 'access_datetime', 'access_ip', 'access_country_code', 'access_browser', 'access_os', 'access_language', 'access_device'
     ];
 
     /**
