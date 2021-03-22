@@ -8,6 +8,9 @@ use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use \SimpleSoftwareIO\QrCode\Facades\QrCode as QRCodeBuilderFacade;
+use function PHPUnit\Framework\isEmpty;
 
 class QRCodesController extends Controller {
 
@@ -25,13 +28,44 @@ class QRCodesController extends Controller {
 		return response() -> json(QRCodeService::getPaginatedAllQRCodesByUserId(Auth::user()->id, $itemsPerPage), 200);
 	}
 
-	function getQRCode(string $id): JsonResponse {
+	function getQRCode(Request $req, string $id): JsonResponse {
+		$this->validate($req, [
+			'foreground_color' => 'regex:/^(#[a-zA-Z0-9]{6})$/i',
+			'background_color' => 'regex:/^(#[a-zA-Z0-9]{6})$/i',
+			'dot_style' => Rule::in(['square', 'dot', 'round']),
+			'size' => 'integer|min:32|max:2048',
+			'logo' => 'image|mimes:png'
+		]);
+
 		$qrcode = QRCodeService::getQRCode($id);
 		if($qrcode == NULL || (Auth::user()->id != $qrcode->user_id && !Auth::user()->is_admin))
 			return response() -> json(['Error' => 'QRCode not found'], 404);
 
-		//Add svg_image to the response
-		$qrcode->png_image = base64_encode((string)\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->errorCorrection('H')->size(256)->generate(env('APP_URL') . "/q/" . $qrcode->id));
+		$qrcode_builder = QRCodeBuilderFacade::format('png')
+			->errorCorrection('H')
+			->size($req->get('size') ?? 256);
+
+		if($foreground_hex = $req->get('foreground_color')){
+			$fore_r = hexdec(substr($foreground_hex,1,2));
+			$fore_g = hexdec(substr($foreground_hex,3,2));
+			$fore_b = hexdec(substr($foreground_hex,5,2));
+			$qrcode_builder->color($fore_r, $fore_g, $fore_b);
+		}
+
+		if($background_hex = $req->get('background_color')){
+			$back_r = hexdec(substr($background_hex,1,2));
+			$back_g = hexdec(substr($background_hex,3,2));
+			$back_b = hexdec(substr($background_hex,5,2));
+			$qrcode_builder->backgroundColor($back_r, $back_g, $back_b);
+		}
+
+		if($dot_style = $req->get('dot_style')){
+			$qrcode_builder->style($dot_style, 0.8);
+		}
+
+		//TODO logotipo
+
+		$qrcode->png_image = "data:image/png;base64," . base64_encode((string)$qrcode_builder->generate(env('APP_URL') . "/q/" . $qrcode->id));
 		return response() -> json($qrcode, 200);
 	}
 
