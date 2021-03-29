@@ -28,13 +28,26 @@ class QRCodesController extends Controller {
 		return response() -> json(QRCodeService::getPaginatedAllQRCodesByUserId(Auth::user()->id, $itemsPerPage), 200);
 	}
 
-	function getQRCode(Request $req, string $id): JsonResponse {
+	function getQRCode(string $id): JsonResponse {
+		$qrcode = QRCodeService::getQRCode($id);
+		if($qrcode == NULL || (Auth::user()->id != $qrcode->user_id && !Auth::user()->is_admin))
+			return response() -> json(['Error' => 'QRCode not found'], 404);
+
+		$qrcode_builder = QRCodeBuilderFacade::format('png')
+			->errorCorrection('H')
+			->size(256);
+
+		$qrcode->png_image = "data:image/png;base64," . base64_encode((string)$qrcode_builder->generate(env('APP_URL') . "/q/" . $qrcode->id));
+		return response() -> json($qrcode, 200);
+	}
+
+	function getQRCodeCustomized(Request $req, string $id): JsonResponse {
 		$this->validate($req, [
 			'foreground_color' => 'regex:/^(#[a-zA-Z0-9]{6})$/i',
 			'background_color' => 'regex:/^(#[a-zA-Z0-9]{6})$/i',
 			'dot_style' => Rule::in(['square', 'dot', 'round']),
 			'size' => 'integer|min:32|max:2048',
-			'logo' => 'image|mimes:png'
+			//'base64Image' => 'image|mimes:png'
 		]);
 
 		$qrcode = QRCodeService::getQRCode($id);
@@ -63,7 +76,9 @@ class QRCodesController extends Controller {
 			$qrcode_builder->style($dot_style, 0.8);
 		}
 
-		//TODO logotipo
+		if($logo = $req->get('base64Image')){
+			$qrcode_builder->mergeString(base64_decode($logo), 0.2);
+		}
 
 		$qrcode->png_image = "data:image/png;base64," . base64_encode((string)$qrcode_builder->generate(env('APP_URL') . "/q/" . $qrcode->id));
 		return response() -> json($qrcode, 200);

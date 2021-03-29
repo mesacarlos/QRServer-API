@@ -49,6 +49,7 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 
 	//Endpoints para qrcodes
 	$router->get('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@getQRCode']);
+	$router->post('/api/v1/qrcode/{id}/customize', ['uses' => 'QRCodesController@getQRCodeCustomized']);
 	$router->post('/api/v1/qrcode', ['uses' => 'QRCodesController@createQRCode']);
 	$router->put('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@updateQRCode']);
 	$router->delete('/api/v1/qrcode/{id}', ['uses' => 'QRCodesController@deleteQRCode']);
