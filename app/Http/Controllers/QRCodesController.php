@@ -77,7 +77,7 @@ class QRCodesController extends Controller {
 		}
 
 		if($logo = $req->get('base64Image')){
-			$qrcode_builder->mergeString(base64_decode($logo), 0.2);
+			$qrcode_builder->mergeString(base64_decode($logo), 0.3);
 		}
 
 		$qrcode->png_image = "data:image/png;base64," . base64_encode((string)$qrcode_builder->generate(env('APP_URL') . "/q/" . $qrcode->id));

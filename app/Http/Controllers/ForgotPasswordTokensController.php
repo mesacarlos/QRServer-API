@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Mail;
 class ForgotPasswordTokensController extends Controller{
 
 	function sendToken(Request $req): JsonResponse{
+		$this->validate($req, [
+			'email' => 'required|email',
+		]);
+
 		$user = UsersService::getUserByEmail($req->get("email"));
 		if(!$user)
 			return response()->json(true, 200);
