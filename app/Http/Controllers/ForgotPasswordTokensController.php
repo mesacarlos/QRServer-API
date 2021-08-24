@@ -40,6 +40,12 @@ class ForgotPasswordTokensController extends Controller{
 	}
 
     function updatePassword(Request $req): JsonResponse{
+
+		$this->validate($req, [
+			'id' => 'required',
+			'password' => 'required'
+		]);
+
         $token = ForgotPasswordTokensService::getToken($req->get("id"));
 
         if(!$token)

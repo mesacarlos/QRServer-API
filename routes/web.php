@@ -15,7 +15,7 @@
 
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+	return redirect(env('FRONTEND_URL'));
 });
 
 //Endpoints que no son parte de la API
