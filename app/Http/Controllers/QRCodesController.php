@@ -100,7 +100,7 @@ class QRCodesController extends Controller {
 		$qrcode = QRCodeService::createQRCode($qrcode_id, Auth::user()->id, $req->get("destination_url"));
 
 		if($qrcode == NULL)
-			return response() -> json(['Error' => 'A QR Code with the given ID already exists'], 409);
+			return response() -> json(['Error' => 'A QR Code with the given ID already exists'], 422);
 		return response() -> json($qrcode, 200);
 	}
 
